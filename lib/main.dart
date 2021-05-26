@@ -24,20 +24,37 @@ class TasksToDo extends StatefulWidget {
 }
 
 class _TasksToDoState extends State<TasksToDo> {
-  final tasks = <String>['Task One', 'Task Two', 'Task Three', 'Task Four'];
-  //print(_tasks.length);
-  final _biggerFont = TextStyle(fontSize: 24);
+  final tasks = <String>['This is a really long task that I am hoping will cover more than the width of the phone', 'Task Two', 'This is another really long task that I am hoping will cover more than the width of the phone', 'Task Four'];
+  var textFieldVis = false;
+
+  TextEditingController taskController = TextEditingController();
+
+  void setTextVis() {
+    if (textFieldVis = false)
+      textFieldVis = true;
+    else
+      textFieldVis = false;
+  }
+
+  void addTaskToList() {
+    tasks.insert(0, taskController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My To Do List", style: TextStyle(fontSize: 32)),
+        title: Text("To Do List", style: TextStyle(fontSize: 32)),
       ),
       body: _buildTasks(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.greenAccent[400],
-        elevation: 5,
-        onPressed: () {},
+        elevation: 0,
+        onPressed: () {
+          setState(() {
+            textFieldVis = true;
+          });
+        },
         child: Icon(
           Icons.add,
           color: Colors.white,
@@ -54,9 +71,10 @@ class _TasksToDoState extends State<TasksToDo> {
             itemBuilder: (context, i) {
               final task = tasks[i];
               return ListTile(
+                dense: true,
                 title: Text(
                   task,
-                  style: _biggerFont,
+                  style: TextStyle(fontSize: 16),
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.delete_rounded),
@@ -72,6 +90,23 @@ class _TasksToDoState extends State<TasksToDo> {
             separatorBuilder: (context, index){
               return Divider();
             },
+          ),
+        ),
+        SafeArea(
+          child: Visibility(
+            visible: textFieldVis,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 80, 14),
+              child: TextFormField(
+                controller: taskController,
+                decoration: InputDecoration(
+                  filled: true,
+                  border: OutlineInputBorder(),
+                  labelText: "Enter task",
+                ),
+                //onFieldSubmitted: () {addTaskToList();},
+              ),
+            ),
           ),
         ),
       ],
