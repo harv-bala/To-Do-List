@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
@@ -24,13 +26,12 @@ class TasksToDo extends StatefulWidget {
 }
 
 class _TasksToDoState extends State<TasksToDo> {
-  final tasks = <String>[];
-  var textFieldVis = false;
-  var result = '';
+  var tasks = <String>[]; // Initialising an empty list ready for later use
+  var textFieldVis = false; // On startup, I want the text field box to be hidden
 
   TextEditingController taskController = TextEditingController();
 
-  void setTextVis() {
+  void setTextVis() { // Inverting the visibility of the text field. If it's hidden, show it and vice versa
     if (textFieldVis = false)
       textFieldVis = true;
     else
@@ -38,10 +39,37 @@ class _TasksToDoState extends State<TasksToDo> {
   }
 
   void addTaskToList() {
-    tasks.insert(0, taskController.text);
+    tasks.insert(0, taskController.text); // Insert the text input from the text field into the tasks list
+  }
+
+  _save(text) async { // Method for saving the list of tasks locally (persistent)
+    final dir = await getApplicationDocumentsDirectory(); // Find the application's documents directory
+    final file = File('${dir.path}/tasks.txt'); // Add the file name of the file we're concerned with to the end
+    await file.writeAsString((text + "\n"), mode: FileMode.append); // Write the passed in text, as well as a new line
+    // A new line is added so that, when reading the file, 'readAsLines' will generate a list for each separate task
+  }
+
+  read() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/tasks.txt');
+      var contents = await file.readAsLines();
+      contents = contents.reversed.toList();
+      setState(() {
+        tasks = contents;
+      });
+    }
+    catch (error) { // Output the offending error
+      print(error);
+    }
   }
 
   @override
+  void initState() {
+    super.initState();
+    read();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -109,6 +137,7 @@ class _TasksToDoState extends State<TasksToDo> {
                   setState(() {
                     addTaskToList();
                     textFieldVis = false;
+                    _save(taskController.text);
                   });
                   taskController.clear();
                 },
