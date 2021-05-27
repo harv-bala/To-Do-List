@@ -81,7 +81,8 @@ class _TasksToDoState extends State<TasksToDo> {
       ),
       body: _buildTasks(),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.greenAccent[400],
+        backgroundColor: Colors.blue,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
         onPressed: () {
           setState(() {
@@ -90,7 +91,7 @@ class _TasksToDoState extends State<TasksToDo> {
         },
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: Colors.grey[900],
           ),
       ),
     );
@@ -135,7 +136,7 @@ class _TasksToDoState extends State<TasksToDo> {
                 controller: taskController,
                 decoration: InputDecoration(
                   filled: true,
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   labelText: "Enter task",
                 ),
                 onFieldSubmitted: (String str) {
