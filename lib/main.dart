@@ -24,8 +24,9 @@ class TasksToDo extends StatefulWidget {
 }
 
 class _TasksToDoState extends State<TasksToDo> {
-  final tasks = <String>['This is a really long task that I am hoping will cover more than the width of the phone', 'Task Two', 'This is another really long task that I am hoping will cover more than the width of the phone', 'Task Four'];
+  final tasks = <String>[];
   var textFieldVis = false;
+  var result = '';
 
   TextEditingController taskController = TextEditingController();
 
@@ -104,7 +105,13 @@ class _TasksToDoState extends State<TasksToDo> {
                   border: OutlineInputBorder(),
                   labelText: "Enter task",
                 ),
-                //onFieldSubmitted: () {addTaskToList();},
+                onFieldSubmitted: (String str) {
+                  setState(() {
+                    addTaskToList();
+                    textFieldVis = false;
+                  });
+                  taskController.clear();
+                },
               ),
             ),
           ),
