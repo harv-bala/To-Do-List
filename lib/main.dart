@@ -42,10 +42,14 @@ class _TasksToDoState extends State<TasksToDo> {
     tasks.insert(0, taskController.text); // Insert the text input from the text field into the tasks list
   }
 
-  _save(text) async { // Method for saving the list of tasks locally (persistent)
+  save(textList) async { // Method for saving the list of tasks locally (persistent)
+    var textToWrite = '';
     final dir = await getApplicationDocumentsDirectory(); // Find the application's documents directory
     final file = File('${dir.path}/tasks.txt'); // Add the file name of the file we're concerned with to the end
-    await file.writeAsString((text + "\n"), mode: FileMode.append); // Write the passed in text, as well as a new line
+        for (var i = 0; i < tasks.length; i++) {
+      textToWrite += (tasks.reversed.toList()[i] + "\n");
+    }
+    await file.writeAsString(textToWrite); // Write the passed in text, as well as a new line
     // A new line is added so that, when reading the file, 'readAsLines' will generate a list for each separate task
   }
 
@@ -112,6 +116,7 @@ class _TasksToDoState extends State<TasksToDo> {
                     setState(() {
                       tasks.removeAt(i);
                     });
+                    save(tasks);
                   },
                 ),
               );
@@ -137,7 +142,7 @@ class _TasksToDoState extends State<TasksToDo> {
                   setState(() {
                     addTaskToList();
                     textFieldVis = false;
-                    _save(taskController.text);
+                    save(tasks);
                   });
                   taskController.clear();
                 },
