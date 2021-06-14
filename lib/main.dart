@@ -96,6 +96,7 @@ class _TasksToDoState extends State<TasksToDo> {
       ),
     );
   }
+  /*
   Widget _buildTasks() {
     return Column(
       children: <Widget>[
@@ -124,6 +125,101 @@ class _TasksToDoState extends State<TasksToDo> {
             },
             separatorBuilder: (context, index){
               return Divider();
+            },
+          ),
+        ),
+        SafeArea(
+          child: Visibility(
+            visible: textFieldVis,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 80, 14),
+              child: TextFormField(
+                controller: taskController,
+                decoration: InputDecoration(
+                  filled: true,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  labelText: "Enter task",
+                ),
+                onFieldSubmitted: (String str) {
+                  setState(() {
+                    addTaskToList();
+                    textFieldVis = false;
+                    save(tasks);
+                  });
+                  taskController.clear();
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  */
+  Widget _buildTasks() {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder: (context, i) {
+              final task = tasks[i];
+              return SizedBox(
+                height: 180,
+                child: Card(
+                  margin: EdgeInsets.all(18),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Spacer(),
+                              SizedBox(
+                                width: 32,
+                                height: 32,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      tasks.removeAt(i);
+                                    });
+                                    save(tasks);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(6)
+                                    ),
+                                    child: Icon(Icons.delete),
+                                  ),
+                                )
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                task,
+                                style: TextStyle(
+                                  fontSize: 24
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         ),
